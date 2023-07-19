@@ -1,0 +1,8 @@
+
+bin/SoH_Mod_Manager_Linux.zip
+bin/SoH_Mod_Manager_win64.zip
+bin/win64/SoH_mod_manager.exe
+bin/win64/SoH_mod_manager.pck
+bin/x11/SoH_mod_manager.pck
+bin/x11/SoH_mod_manager.x86_64
+export_presets.cfg
