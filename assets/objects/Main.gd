@@ -1,9 +1,10 @@
 extends Node
 
 const entry_button_file = preload("res://assets/objects/entry_button.tscn")
+const offset_value = 32
 
-onready var L_window = $Left_window/VBoxContainer
-onready var R_window = $Right_window/VBoxContainer
+onready var L_window = $Left_window/Container
+onready var R_window = $Right_window/Container
 var opened_dialog = false
 var dia_ref #unintiated reference to the popup dialog box that is used when selecting files/folders
 var current_folder_path = ""
@@ -12,13 +13,28 @@ var current_folder_path = ""
 #	Pretty it up to look presentable.
 #	Add a way to move a item up and down the list without having to remove a item.
 
+func _ready():
+	$Right_window.minimum_size_changed()
+
 func populate_list(entry : String, folder_path : String, container : Node, group_name : String):
 	#Populates a given field with entry_button nodes representing a .otr file
 	var new_instance = entry_button_file.instance()
 	new_instance.add_to_group(group_name)
 	new_instance.set_text(entry)
 	new_instance.mod_file_path = folder_path + "/" + entry
+	new_instance.toggle_dir_buttons(false)
 	container.add_child(new_instance)
+
+func handle_offset(group_name : String):
+	var iter_count = 1
+	for nodes in get_tree().get_nodes_in_group(group_name):
+		nodes.rect_position.y = offset_value * iter_count
+		iter_count += 1
+		nodes.get_parent().rect_min_size.y = offset_value * iter_count
+
+func refresh_offsets():
+	handle_offset("R-side")
+	handle_offset("L-side")
 
 func swap_sides(obj_ref):
 	#This is called from the entry_button node via the "Pressed" signal, obj_ref is the sender of the signal
@@ -28,11 +44,14 @@ func swap_sides(obj_ref):
 		obj_ref.get_parent().remove_child(obj_ref)
 		R_window.add_child(obj_ref)
 		obj_ref.add_to_group("R-side")
+		obj_ref.toggle_dir_buttons(false)
 	elif obj_ref.is_in_group("R-side"):
 		obj_ref.remove_from_group("R-side")
 		obj_ref.get_parent().remove_child(obj_ref)
 		L_window.add_child(obj_ref)
 		obj_ref.add_to_group("L-side")
+		obj_ref.toggle_dir_buttons(true)
+	refresh_offsets()
 
 func save_mod_list(file_path):
 	#Saves mod list to a .json file
@@ -63,6 +82,7 @@ func on_folder_select(opened_path):
 	dia_ref.queue_free()
 	for nodes in get_tree().get_nodes_in_group("R-side"):
 		nodes.queue_free()
+	yield(get_tree().create_timer(0.5), "timeout")
 	opened_dialog = false
 	var dir = Directory.new()
 	if dir.open(opened_path) == OK:
@@ -73,6 +93,7 @@ func on_folder_select(opened_path):
 			if file_name.ends_with(".otr"):
 				if check_if_on_load_list(file_name) == false:
 					populate_list(file_name, opened_path, R_window, "R-side")
+					refresh_offsets()
 			file_name = dir.get_next()
 
 func on_dialog_close():

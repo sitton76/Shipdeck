@@ -38,6 +38,14 @@ margin_top = 128.0
 margin_right = 384.0
 margin_bottom = 600.0
 
+[node name="R_window_BG" type="Panel" parent="."]
+modulate = Color( 1, 1, 1, 0.352941 )
+margin_left = 640.0
+margin_top = 128.0
+margin_right = 1023.0
+margin_bottom = 599.706
+rect_min_size = Vector2( 383, 471.706 )
+
 [node name="Load_order" type="RichTextLabel" parent="."]
 margin_left = 56.0
 margin_top = 80.0
@@ -60,23 +68,20 @@ bbcode_text = "[center]Mod List[/center]"
 text = "Mod List"
 scroll_active = false
 
-[node name="R_window_BG" type="Panel" parent="."]
-modulate = Color( 1, 1, 1, 0.352941 )
-margin_left = 640.0
-margin_top = 128.0
-margin_right = 1024.0
-margin_bottom = 600.0
-
 [node name="Left_window" type="ScrollContainer" parent="."]
 anchor_bottom = 1.0
 margin_top = 128.0
 margin_right = 384.0
+rect_min_size = Vector2( 384, 472 )
 __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Left_window"]
-alignment = 1
+[node name="Container" type="ColorRect" parent="Left_window"]
+margin_right = 384.0
+margin_bottom = 472.0
+rect_min_size = Vector2( 384, 472 )
+color = Color( 1, 1, 1, 0 )
 
 [node name="Middle_window" type="Control" parent="."]
 anchor_left = 0.375
@@ -132,19 +137,25 @@ anchor_top = 0.213
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_top = 0.199989
+rect_min_size = Vector2( 384, 472 )
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Right_window"]
-alignment = 1
+[node name="Container" type="ColorRect" parent="Right_window"]
+margin_right = 384.0
+margin_bottom = 472.0
+rect_min_size = Vector2( 384, 472 )
+color = Color( 1, 1, 1, 0 )
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2( 512, 300 )
 current = true
 
 [node name="version_label" type="Label" parent="."]
-margin_right = 40.0
-margin_bottom = 14.0
+margin_left = 4.0
+margin_top = 3.0
+margin_right = 97.0
+margin_bottom = 22.0
 custom_fonts/font = SubResource( 4 )
-text = "Version: 0.1"
+text = "Version: 0.2"
 
 [connection signal="pressed" from="Middle_window/VBoxContainer/load_folder" to="." method="_on_load_folder_pressed"]
 [connection signal="pressed" from="Middle_window/VBoxContainer/save_list" to="." method="_on_save_list_pressed"]
