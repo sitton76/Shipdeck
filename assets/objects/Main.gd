@@ -9,10 +9,6 @@ var opened_dialog = false
 var dia_ref #unintiated reference to the popup dialog box that is used when selecting files/folders
 var current_folder_path = ""
 
-#TODO:
-#	Pretty it up to look presentable.
-#	Add a way to move a item up and down the list without having to remove a item.
-
 func _ready():
 	$Right_window.minimum_size_changed()
 
@@ -25,16 +21,14 @@ func populate_list(entry : String, folder_path : String, container : Node, group
 	new_instance.toggle_dir_buttons(false)
 	container.add_child(new_instance)
 
-func handle_offset(group_name : String):
-	var iter_count = 1
-	for nodes in get_tree().get_nodes_in_group(group_name):
-		nodes.rect_position.y = offset_value * iter_count
-		iter_count += 1
-		nodes.get_parent().rect_min_size.y = offset_value * iter_count
-
-func refresh_offsets():
-	handle_offset("R-side")
-	handle_offset("L-side")
+func handle_offset():
+	var side_groups = ["R-side", "L-side"]
+	for group in side_groups:
+		var iter_count = 1
+		for nodes in get_tree().get_nodes_in_group(group):
+			nodes.rect_position.y = offset_value * iter_count
+			iter_count += 1
+			nodes.get_parent().rect_min_size.y = offset_value * iter_count
 
 func swap_sides(obj_ref):
 	#This is called from the entry_button node via the "Pressed" signal, obj_ref is the sender of the signal
@@ -51,7 +45,7 @@ func swap_sides(obj_ref):
 		L_window.add_child(obj_ref)
 		obj_ref.add_to_group("L-side")
 		obj_ref.toggle_dir_buttons(true)
-	refresh_offsets()
+	handle_offset()
 
 func save_mod_list(file_path):
 	#Saves mod list to a .json file
@@ -93,7 +87,7 @@ func on_folder_select(opened_path):
 			if file_name.ends_with(".otr"):
 				if check_if_on_load_list(file_name) == false:
 					populate_list(file_name, opened_path, R_window, "R-side")
-					refresh_offsets()
+					handle_offset()
 			file_name = dir.get_next()
 
 func on_dialog_close():

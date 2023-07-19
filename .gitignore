@@ -6,3 +6,9 @@ bin/win64/SoH_mod_manager.pck
 bin/x11/SoH_mod_manager.pck
 bin/x11/SoH_mod_manager.x86_64
 export_presets.cfg
+bin/MacOS/SoH_mod_manager.app/Contents/Resources/SoH Mod Manager.pck
+bin/MacOS/SoH_mod_manager.app/Contents/Resources/icon.icns
+bin/MacOS/SoH_mod_manager.app/Contents/PkgInfo
+bin/MacOS/SoH_mod_manager.app/Contents/MacOS/SoH Mod Manager
+bin/MacOS/SoH_mod_manager.app/Contents/Info.plist
+bin/MacOS/SoH_mod_manager.app/Contents/_CodeSignature/CodeResources

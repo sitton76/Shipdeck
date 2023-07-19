@@ -10,7 +10,8 @@ config_version=4
 
 [application]
 
-config/name="SoH_mod_manager"
+config/name="Shipdeck"
+config/description="A tool for writing .json files containing paths for .otr files."
 run/main_scene="res://assets/objects/Main.tscn"
 config/icon="res://icon.png"
 
