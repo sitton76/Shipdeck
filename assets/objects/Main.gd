@@ -104,6 +104,7 @@ func on_soh_folder_select(opened_path):
 
 func on_mods_folder_select(opened_path):
 	#Selects the folder containing .otr files
+	var found_mods = false
 	dia_ref.queue_free()
 	for nodes in get_tree().get_nodes_in_group("R-side"):
 		nodes.queue_free()
@@ -119,7 +120,10 @@ func on_mods_folder_select(opened_path):
 				if check_if_on_load_list(file_name) == false:
 					populate_list(file_name, opened_path, R_window, "R-side")
 					handle_offset()
+					found_mods = true
 			file_name = dir.get_next()
+	if found_mods == true:
+		$msg_label.display_text("Selected folder contains .otr mods, repopulating Mod List...")
 
 func on_dialog_close():
 	#In the event the player closes a dialog box, frees it then allows the player to spawn more.

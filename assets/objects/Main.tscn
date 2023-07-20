@@ -108,49 +108,55 @@ margin_bottom = -0.232025
 alignment = 1
 
 [node name="soh_folder" type="Button" parent="Middle_window/VBoxContainer"]
-margin_top = 57.0
+margin_top = 39.0
 margin_right = 192.0
-margin_bottom = 82.0
+margin_bottom = 64.0
 custom_fonts/font = SubResource( 5 )
 text = "Select SoH Folder"
 
-[node name="load_folder" type="Button" parent="Middle_window/VBoxContainer"]
-margin_top = 86.0
+[node name="Spacer" type="Control" parent="Middle_window/VBoxContainer"]
+margin_top = 68.0
 margin_right = 192.0
-margin_bottom = 111.0
+margin_bottom = 100.0
+rect_min_size = Vector2( 0, 32 )
+
+[node name="load_folder" type="Button" parent="Middle_window/VBoxContainer"]
+margin_top = 104.0
+margin_right = 192.0
+margin_bottom = 129.0
 custom_fonts/font = SubResource( 1 )
 text = "Select Mods Folder"
 
-[node name="Spacer" type="Control" parent="Middle_window/VBoxContainer"]
-margin_top = 115.0
+[node name="Spacer2" type="Control" parent="Middle_window/VBoxContainer"]
+margin_top = 133.0
 margin_right = 192.0
-margin_bottom = 147.0
+margin_bottom = 165.0
 rect_min_size = Vector2( 0, 32 )
 
 [node name="clear_load_list" type="Button" parent="Middle_window/VBoxContainer"]
-margin_top = 151.0
+margin_top = 169.0
 margin_right = 192.0
-margin_bottom = 176.0
+margin_bottom = 194.0
 custom_fonts/font = SubResource( 2 )
 text = "Clear Load Order"
 
 [node name="clear_mod_list" type="Button" parent="Middle_window/VBoxContainer"]
-margin_top = 180.0
+margin_top = 198.0
 margin_right = 192.0
-margin_bottom = 205.0
+margin_bottom = 223.0
 custom_fonts/font = SubResource( 2 )
 text = "Clear Mod List"
 
-[node name="Spacer2" type="Control" parent="Middle_window/VBoxContainer"]
-margin_top = 209.0
+[node name="Spacer3" type="Control" parent="Middle_window/VBoxContainer"]
+margin_top = 227.0
 margin_right = 192.0
-margin_bottom = 241.0
+margin_bottom = 259.0
 rect_min_size = Vector2( 0, 32 )
 
 [node name="save_list" type="Button" parent="Middle_window/VBoxContainer"]
-margin_top = 245.0
+margin_top = 263.0
 margin_right = 192.0
-margin_bottom = 270.0
+margin_bottom = 288.0
 custom_fonts/font = SubResource( 2 )
 disabled = true
 text = "Save Load Order"
@@ -179,7 +185,7 @@ margin_top = 3.0
 margin_right = 97.0
 margin_bottom = 22.0
 custom_fonts/font = SubResource( 4 )
-text = "Version: 0.2"
+text = "Version: 0.3"
 
 [node name="soh_path" type="RichTextLabel" parent="."]
 margin_left = 128.0
@@ -194,6 +200,8 @@ text = "     Ship of Harkinian folder path:
  None"
 
 [node name="msg_label" parent="." instance=ExtResource( 4 )]
+margin_top = 128.0
+margin_bottom = 184.0
 
 [connection signal="pressed" from="Middle_window/VBoxContainer/soh_folder" to="." method="_on_soh_folder_pressed"]
 [connection signal="pressed" from="Middle_window/VBoxContainer/load_folder" to="." method="_on_load_folder_pressed"]

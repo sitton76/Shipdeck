@@ -16,8 +16,9 @@ func _on_move_side_button_pressed():
 	get_tree().current_scene.swap_sides(self)
 
 func _on_Up_button_pressed():
-	get_parent().move_child(self, get_index() - 1)
-	get_tree().current_scene.handle_offset()
+	if get_index() != 0:
+		get_parent().move_child(self, get_index() - 1)
+		get_tree().current_scene.handle_offset()
 
 func _on_Down_button_pressed():
 	get_parent().move_child(self, get_index() + 1)
