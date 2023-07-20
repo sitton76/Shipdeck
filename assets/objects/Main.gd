@@ -10,12 +10,13 @@ var dia_ref #unintiated reference to the popup dialog box that is used when sele
 var current_folder_path = ""
 var soh_folder = ""
 
+
 func populate_list(entry : String, folder_path : String, container : Node, group_name : String):
 	#Populates a given field with entry_button nodes representing a .otr file
 	var new_instance = entry_button_file.instance()
 	new_instance.add_to_group(group_name)
 	new_instance.set_text(entry)
-	new_instance.mod_file_path = folder_path + OS_check() + entry
+	new_instance.mod_file_path = folder_path + "/" + entry
 	new_instance.toggle_dir_buttons(false)
 	container.add_child(new_instance)
 
@@ -56,7 +57,7 @@ func save_mod_list():
 		stored_data.merge({iter_count : nodes.mod_file_path})
 		iter_count += 1
 	if iter_count > 0:
-		var file_path = soh_folder + OS_check() + "load-order.json"
+		var file_path = soh_folder + "/" + "load-order.json"
 		stored_data.merge({"List-size" : str(iter_count - 1)})
 		var file = File.new()
 		file.open(file_path, file.WRITE)
@@ -66,22 +67,22 @@ func save_mod_list():
 		opened_dialog = false
 
 func find_soh(path : String) -> bool:
-	var soh_file_names = ["\\soh.exe", "/soh.appimage", "/SoH.dmg"]
+	var soh_file_names = ["/soh.exe", "/soh.appimage", "/SoH.dmg"]
 	var file = File.new()
 	for names in soh_file_names:
 		if file.file_exists(path + names) == true:
 			return true
 	return false
 	
-func OS_check() -> String:
-	match OS.get_name():
-		"Windows", "UWP":
-			return("\\")
-		"Linux", "FreeBSD", "NetBSD", "OpenBSD", "BSD":
-			return("/")
-		"macOS":
-			return("/")
-	return "/" #If it is not detected it is likely running some form on linux...maybe
+#func OS_check() -> String:
+#	match OS.get_name():
+#		"Windows", "UWP":
+#			return("/")
+#		"Linux", "FreeBSD", "NetBSD", "OpenBSD", "BSD":
+#			return("/")
+#		"macOS":
+#			return("/")
+#	return "/" #If it is not detected it is likely running some form on linux...maybe
 
 func check_if_on_load_list(file_name : String) -> bool:
 	#Checks to see if a element is already on the Mod Load Order List, which will then prevent it
