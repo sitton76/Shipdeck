@@ -12,3 +12,16 @@ bin/MacOS/SoH_mod_manager.app/Contents/PkgInfo
 bin/MacOS/SoH_mod_manager.app/Contents/MacOS/SoH Mod Manager
 bin/MacOS/SoH_mod_manager.app/Contents/Info.plist
 bin/MacOS/SoH_mod_manager.app/Contents/_CodeSignature/CodeResources
+bin/win64/Shipdeck.pck
+bin/win64/Shipdeck.exe
+bin/Shipdeck_win64.zip
+bin/Shipdeck_MacOS.zip
+bin/Shipdeck_Linux.zip
+bin/MacOS/Shipdeck.app/Contents/Resources/Shipdeck.pck
+bin/MacOS/Shipdeck.app/Contents/Resources/icon.icns
+bin/MacOS/Shipdeck.app/Contents/PkgInfo
+bin/MacOS/Shipdeck.app/Contents/MacOS/Shipdeck
+bin/MacOS/Shipdeck.app/Contents/Info.plist
+bin/MacOS/Shipdeck.app/Contents/_CodeSignature/CodeResources
+bin/Linux/Shipdeck.x86_64
+bin/Linux/Shipdeck.pck

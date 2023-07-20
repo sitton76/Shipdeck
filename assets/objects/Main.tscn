@@ -2,7 +2,7 @@
 
 [ext_resource path="res://assets/objects/Main.gd" type="Script" id=1]
 [ext_resource path="res://assets/fonts/Comfortaa-Regular.ttf" type="DynamicFontData" id=2]
-[ext_resource path="res://assets/ship_image.png" type="Texture" id=3]
+[ext_resource path="res://assets/objects/3D_scene_holder.tscn" type="PackedScene" id=3]
 
 [sub_resource type="DynamicFont" id=3]
 size = 32
@@ -24,13 +24,7 @@ font_data = ExtResource( 2 )
 [node name="Main" type="Node"]
 script = ExtResource( 1 )
 
-[node name="ShipImage" type="Sprite" parent="."]
-position = Vector2( 512, 302 )
-scale = Vector2( 0.592936, 0.602386 )
-texture = ExtResource( 3 )
-__meta__ = {
-"_edit_lock_": true
-}
+[node name="3D_scene_holder" parent="." instance=ExtResource( 3 )]
 
 [node name="L_window_BG" type="Panel" parent="."]
 modulate = Color( 1, 1, 1, 0.352941 )
