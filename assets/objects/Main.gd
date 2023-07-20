@@ -66,7 +66,7 @@ func save_mod_list():
 		opened_dialog = false
 
 func find_soh(path : String) -> bool:
-	var soh_file_names = ["\\soh.exe", "/soh.appimage", "/soh.dmg"]
+	var soh_file_names = ["\\soh.exe", "/soh.appimage", "/SoH.dmg"]
 	var file = File.new()
 	for names in soh_file_names:
 		if file.file_exists(path + names) == true:

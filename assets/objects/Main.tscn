@@ -202,6 +202,7 @@ text = "     Ship of Harkinian folder path:
 [node name="msg_label" parent="." instance=ExtResource( 4 )]
 margin_top = 128.0
 margin_bottom = 184.0
+text = "test"
 
 [connection signal="pressed" from="Middle_window/VBoxContainer/soh_folder" to="." method="_on_soh_folder_pressed"]
 [connection signal="pressed" from="Middle_window/VBoxContainer/load_folder" to="." method="_on_load_folder_pressed"]
