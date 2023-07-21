@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://assets/objects/Main.gd" type="Script" id=1]
 [ext_resource path="res://assets/fonts/Comfortaa-Regular.ttf" type="DynamicFontData" id=2]
@@ -12,9 +12,6 @@ outline_color = Color( 0, 0, 0, 1 )
 font_data = ExtResource( 2 )
 
 [sub_resource type="DynamicFont" id=5]
-font_data = ExtResource( 2 )
-
-[sub_resource type="DynamicFont" id=1]
 font_data = ExtResource( 2 )
 
 [sub_resource type="DynamicFont" id=2]
@@ -108,55 +105,35 @@ margin_bottom = -0.232025
 alignment = 1
 
 [node name="soh_folder" type="Button" parent="Middle_window/VBoxContainer"]
-margin_top = 39.0
+margin_top = 102.0
 margin_right = 192.0
-margin_bottom = 64.0
+margin_bottom = 127.0
 custom_fonts/font = SubResource( 5 )
 text = "Select SoH Folder"
 
 [node name="Spacer" type="Control" parent="Middle_window/VBoxContainer"]
-margin_top = 68.0
+margin_top = 131.0
 margin_right = 192.0
-margin_bottom = 100.0
-rect_min_size = Vector2( 0, 32 )
-
-[node name="load_folder" type="Button" parent="Middle_window/VBoxContainer"]
-margin_top = 104.0
-margin_right = 192.0
-margin_bottom = 129.0
-custom_fonts/font = SubResource( 1 )
-text = "Select Mods Folder"
-
-[node name="Spacer2" type="Control" parent="Middle_window/VBoxContainer"]
-margin_top = 133.0
-margin_right = 192.0
-margin_bottom = 165.0
-rect_min_size = Vector2( 0, 32 )
+margin_bottom = 147.0
+rect_min_size = Vector2( 0, 16 )
 
 [node name="clear_load_list" type="Button" parent="Middle_window/VBoxContainer"]
-margin_top = 169.0
+margin_top = 151.0
 margin_right = 192.0
-margin_bottom = 194.0
+margin_bottom = 176.0
 custom_fonts/font = SubResource( 2 )
 text = "Clear Load Order"
 
-[node name="clear_mod_list" type="Button" parent="Middle_window/VBoxContainer"]
-margin_top = 198.0
+[node name="Spacer2" type="Control" parent="Middle_window/VBoxContainer"]
+margin_top = 180.0
 margin_right = 192.0
-margin_bottom = 223.0
-custom_fonts/font = SubResource( 2 )
-text = "Clear Mod List"
-
-[node name="Spacer3" type="Control" parent="Middle_window/VBoxContainer"]
-margin_top = 227.0
-margin_right = 192.0
-margin_bottom = 259.0
-rect_min_size = Vector2( 0, 32 )
+margin_bottom = 196.0
+rect_min_size = Vector2( 0, 16 )
 
 [node name="save_list" type="Button" parent="Middle_window/VBoxContainer"]
-margin_top = 263.0
+margin_top = 200.0
 margin_right = 192.0
-margin_bottom = 288.0
+margin_bottom = 225.0
 custom_fonts/font = SubResource( 2 )
 disabled = true
 text = "Save Load Order"
@@ -185,7 +162,7 @@ margin_top = 3.0
 margin_right = 97.0
 margin_bottom = 22.0
 custom_fonts/font = SubResource( 4 )
-text = "Version: 0.3"
+text = "Version: 0.4"
 
 [node name="soh_path" type="RichTextLabel" parent="."]
 margin_left = 128.0
@@ -205,7 +182,5 @@ margin_bottom = 184.0
 text = "test"
 
 [connection signal="pressed" from="Middle_window/VBoxContainer/soh_folder" to="." method="_on_soh_folder_pressed"]
-[connection signal="pressed" from="Middle_window/VBoxContainer/load_folder" to="." method="_on_load_folder_pressed"]
 [connection signal="pressed" from="Middle_window/VBoxContainer/clear_load_list" to="." method="_on_clear_load_list_pressed"]
-[connection signal="pressed" from="Middle_window/VBoxContainer/clear_mod_list" to="." method="_on_clear_mod_list_pressed"]
 [connection signal="pressed" from="Middle_window/VBoxContainer/save_list" to="." method="_on_save_list_pressed"]
