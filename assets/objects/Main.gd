@@ -5,11 +5,10 @@ const offset_value = 32
 
 onready var L_window = $Left_window/Container
 onready var R_window = $Right_window/Container
-var loaded_json_file
+var loaded_json_file #Holds data pulled from shipofharkinian.json file after being loaded.
 var opened_dialog = false
 var dia_ref #unintiated reference to the popup dialog box that is used when selecting files/folders
 var soh_folder = ""
-
 
 func populate_list(entry : String, container : Node, group_name : String):
 	#Populates a given field with entry_button nodes representing a .otr file
@@ -23,7 +22,7 @@ func populate_list(entry : String, container : Node, group_name : String):
 		new_instance.toggle_dir_buttons(true)
 
 func handle_offset():
-	#Handles spacing of listings
+	#Handles spacing between items in lists.
 	var side_groups = ["R-side", "L-side"]
 	for group in side_groups:
 		var iter_count = 1
@@ -86,6 +85,7 @@ func purge_mod_entries():
 		opened_dialog = false
 
 func read_json_file():
+	#parses existing shipofharkinian.json file if it exists.
 	var dir =  Directory.new()
 	if dir.file_exists(soh_folder + "/shipofharkinian.json") == true:
 		var file = File.new()
@@ -95,6 +95,8 @@ func read_json_file():
 		check_if_mods_is_on_list()
 
 func check_if_mods_is_on_list():
+	#When loading the .json file, it will read through it and add mods already in the load order in the file to the
+	#Load order list in the application
 	if loaded_json_file.has("Mod-Load-Order"):
 		if loaded_json_file.get("Mod-Load-Order").has("List-size"):
 			var mod_count = loaded_json_file.get("Mod-Load-Order").get("List-size")
@@ -108,6 +110,7 @@ func check_if_mods_is_on_list():
 
 
 func find_soh_config(path : String) -> bool:
+	#Checks if it can find the .json config file
 	var config_file_name = "/shipofharkinian.json"
 	var file = File.new()
 	if file.file_exists(path + config_file_name) == true:
@@ -119,6 +122,7 @@ func clear_selection(group : String):
 		nodes.queue_free()
 
 func check_if_can_save():
+	#Prevents clearing list when empty, and saving when no soh_path is found
 	if L_window.get_child_count() != 0:
 		$Middle_window/VBoxContainer/clear_load_list.disabled = false
 	else:
@@ -137,6 +141,7 @@ func check_if_on_list(file_name : String, group : String) -> bool:
 	return false
 
 func on_soh_folder_select(opened_path):
+	#Opens dialog to select folder containing shipofharkinian.json file.
 	dia_ref.queue_free()
 	opened_dialog = false
 	var dir = Directory.new()
@@ -167,6 +172,7 @@ func on_dialog_close():
 	opened_dialog = false
 
 func _on_save_list_pressed():
+	#Button to start either Adding/editing entries for mod load order, or removing it.
 	if soh_folder != "":
 		if L_window.get_child_count() != 0:
 			save_mod_list()
@@ -176,6 +182,7 @@ func _on_save_list_pressed():
 		$msg_label.display_text("Please select a SoH folder first.")
 
 func _on_clear_load_list_pressed():
+	#Empties Load order list and repopulatates the Mods list
 	for nodes in get_tree().get_nodes_in_group("L-side"):
 		swap_sides(nodes)
 
