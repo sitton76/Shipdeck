@@ -20,6 +20,8 @@ func populate_list(entry : String, container : Node, group_name : String):
 	new_instance.mod_file_path = entry
 	new_instance.toggle_dir_buttons(false)
 	container.add_child(new_instance)
+	if group_name == "L-side":
+		new_instance.toggle_dir_buttons(true)
 
 func handle_offset():
 	var side_groups = ["R-side", "L-side"]
@@ -63,14 +65,12 @@ func save_mod_list():
 	if iter_count > 0:
 		var file_path = soh_folder + "/" + "shipofharkinian.json"
 		stored_data.merge({"List-size" : iter_count - 1})
-		print(stored_data)
 		loaded_json_file.merge({"Mod-Load-Order" : stored_data})
-		print({"Mod-Load-Order" : stored_data})
 		var file = File.new()
 		file.open(file_path, file.WRITE)
 		file.store_line(to_json(loaded_json_file))
 		file.close()
-		$msg_label.display_text("load-order.json file saved!")
+		$msg_label.display_text("shipofharkinian.json entries added!")
 		opened_dialog = false
 
 func read_json_file():
@@ -80,13 +80,28 @@ func read_json_file():
 		file.open(soh_folder + "/shipofharkinian.json", File.READ)
 		loaded_json_file = JSON.parse(file.get_as_text()).result
 		file.close()
+		check_if_mods_is_on_list()
+
+func check_if_mods_is_on_list():
+	if loaded_json_file.has("Mod-Load-Order"):
+		print("Had load order entry")
+		if loaded_json_file.get("Mod-Load-Order").has("List-size"):
+			print("Had list entry")
+			var mod_count = loaded_json_file.get("Mod-Load-Order").get("List-size")
+			var iter_count = 1
+			while iter_count <= mod_count:
+				if loaded_json_file.get("Mod-Load-Order").has(str(iter_count)):
+					var found_mod = loaded_json_file.get("Mod-Load-Order").get(str(iter_count))
+					populate_list(found_mod, L_window, "L-side")
+					handle_offset()
+				iter_count += 1
 
 
-func find_soh(path : String) -> bool:
-	var soh_file_names = ["/soh.exe", "/soh.appimage", "/SoH.dmg", "/soh.elf"]
+func find_soh_config(path : String) -> bool:
+	var config_file_name = "/shipofharkinian.json"
 	var file = File.new()
-	for names in soh_file_names:
-		if file.file_exists(path + names) == true:
+	print(path + config_file_name)
+	if file.file_exists(path + config_file_name) == true:
 			return true
 	return false
 	
@@ -97,13 +112,14 @@ func clear_selection(group : String):
 func check_if_can_save():
 	if L_window.get_child_count() != 0 and soh_folder != "":
 		$Middle_window/VBoxContainer/save_list.disabled = false
+		$Middle_window/VBoxContainer/clear_load_list.disabled = false
 	else:
 		$Middle_window/VBoxContainer/save_list.disabled = true
+		$Middle_window/VBoxContainer/clear_load_list.disabled = true
 
-func check_if_on_load_list(file_name : String) -> bool:
-	#Checks to see if a element is already on the Mod Load Order List, which will then prevent it
-	#From loading into the Mod List when another folder is selected.
-	for nodes in get_tree().get_nodes_in_group("L-side"):
+func check_if_on_list(file_name : String, group : String) -> bool:
+	#Checks to see if a element is already on the a list, if so it will not be added on the other list
+	for nodes in get_tree().get_nodes_in_group(group):
 		if nodes.get_text() == file_name:
 			return true
 	return false
@@ -112,26 +128,26 @@ func on_soh_folder_select(opened_path):
 	dia_ref.queue_free()
 	opened_dialog = false
 	var dir = Directory.new()
-	if find_soh(opened_path) == true:
+	if find_soh_config(opened_path) == true:
 		soh_folder = opened_path
 		clear_selection("R-side")
 		clear_selection("L-side")
 		yield(get_tree().create_timer(0.5), "timeout")
+		read_json_file()
 		assign_soh_folderpath_text(soh_folder)
 		if dir.open(soh_folder + "/mods") == OK:
 			dir.list_dir_begin()
 			var file_name = dir.get_next()
 			while file_name != "":
 				if file_name.ends_with(".otr"):
-					if check_if_on_load_list(file_name) == false:
+					if check_if_on_list(file_name, "L-side") == false:
 						populate_list(file_name, R_window, "R-side")
 						handle_offset()
 				file_name = dir.get_next()
 			check_if_can_save()
-			read_json_file()
-			$msg_label.display_text("Found SoH folder!")
+			$msg_label.display_text("shipofharkinian.json file found!")
 	else:
-		$msg_label.display_text("Folder selected does not contain SoH.")
+		$msg_label.display_text("Folder selected does not contain shipofharknian.json file.")
 
 func on_dialog_close():
 	#In the event the player closes a dialog box, frees it then allows the player to spawn more.
@@ -152,7 +168,7 @@ func _on_clear_load_list_pressed():
 		swap_sides(nodes)
 
 func _on_soh_folder_pressed():
-	#File dialog for selecting SoH path
+	#File dialog for selecting SoH config path
 	if opened_dialog == false:
 		opened_dialog = true
 		var dialog = FileDialog.new()
@@ -163,3 +179,7 @@ func _on_soh_folder_pressed():
 		self.add_child(dialog)
 		dia_ref = dialog
 		dialog.popup(Rect2(0, 0, 700, 500))
+
+func _on_Get_Mods_pressed():
+	# warning-ignore:return_value_discarded
+	OS.shell_open("https://gamebanana.com/games/16121")
