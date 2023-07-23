@@ -19,6 +19,7 @@ anchor_bottom = 0.042
 margin_right = 338.0
 margin_bottom = 23.95
 custom_fonts/font = SubResource( 1 )
+clip_text = true
 
 [node name="Up_button" type="Button" parent="."]
 visible = false

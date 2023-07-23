@@ -8,7 +8,6 @@ onready var R_window = $Right_window/Container
 var loaded_json_file
 var opened_dialog = false
 var dia_ref #unintiated reference to the popup dialog box that is used when selecting files/folders
-var current_folder_path = ""
 var soh_folder = ""
 
 
@@ -24,6 +23,7 @@ func populate_list(entry : String, container : Node, group_name : String):
 		new_instance.toggle_dir_buttons(true)
 
 func handle_offset():
+	#Handles spacing of listings
 	var side_groups = ["R-side", "L-side"]
 	for group in side_groups:
 		var iter_count = 1
@@ -54,7 +54,7 @@ func assign_soh_folderpath_text(new_path_text : String):
 	$soh_path.bbcode_text = "[center]     Ship of Harknian folder path:\n " + new_path_text + "[/center]"
 
 func save_mod_list():
-	#Saves mod list to a .json file
+	#Saves mod list to the .json file
 	var stored_data = {}
 	var iter_count = 1
 	if loaded_json_file.has("Mod-Load-Order"):
@@ -73,6 +73,18 @@ func save_mod_list():
 		$msg_label.display_text("shipofharkinian.json entries added!")
 		opened_dialog = false
 
+func purge_mod_entries():
+	#Called if Load Order is empty, will delete the "Mod-Load-Order" entry from the .json file
+	if loaded_json_file.has("Mod-Load-Order"):
+		loaded_json_file.erase("Mod-Load-Order")
+		var file_path = soh_folder + "/" + "shipofharkinian.json"
+		var file = File.new()
+		file.open(file_path, file.WRITE)
+		file.store_line(to_json(loaded_json_file))
+		file.close()
+		$msg_label.display_text("shipofharkinian.json entries removed!")
+		opened_dialog = false
+
 func read_json_file():
 	var dir =  Directory.new()
 	if dir.file_exists(soh_folder + "/shipofharkinian.json") == true:
@@ -84,9 +96,7 @@ func read_json_file():
 
 func check_if_mods_is_on_list():
 	if loaded_json_file.has("Mod-Load-Order"):
-		print("Had load order entry")
 		if loaded_json_file.get("Mod-Load-Order").has("List-size"):
-			print("Had list entry")
 			var mod_count = loaded_json_file.get("Mod-Load-Order").get("List-size")
 			var iter_count = 1
 			while iter_count <= mod_count:
@@ -100,7 +110,6 @@ func check_if_mods_is_on_list():
 func find_soh_config(path : String) -> bool:
 	var config_file_name = "/shipofharkinian.json"
 	var file = File.new()
-	print(path + config_file_name)
 	if file.file_exists(path + config_file_name) == true:
 			return true
 	return false
@@ -110,12 +119,15 @@ func clear_selection(group : String):
 		nodes.queue_free()
 
 func check_if_can_save():
-	if L_window.get_child_count() != 0 and soh_folder != "":
-		$Middle_window/VBoxContainer/save_list.disabled = false
+	if L_window.get_child_count() != 0:
 		$Middle_window/VBoxContainer/clear_load_list.disabled = false
 	else:
-		$Middle_window/VBoxContainer/save_list.disabled = true
 		$Middle_window/VBoxContainer/clear_load_list.disabled = true
+	
+	if soh_folder != "":
+		$Middle_window/VBoxContainer/save_list.disabled = false
+	else:
+		$Middle_window/VBoxContainer/save_list.disabled = true
 
 func check_if_on_list(file_name : String, group : String) -> bool:
 	#Checks to see if a element is already on the a list, if so it will not be added on the other list
@@ -159,7 +171,7 @@ func _on_save_list_pressed():
 		if L_window.get_child_count() != 0:
 			save_mod_list()
 		else:
-			$msg_label.display_text("Please populate load order list before saving.")
+			purge_mod_entries()
 	else:
 		$msg_label.display_text("Please select a SoH folder first.")
 
