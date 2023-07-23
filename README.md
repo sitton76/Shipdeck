@@ -1,5 +1,5 @@
 # Shipdeck
- A tool meant for managing mods and write Load Order entries into the config file used in Ship of Harkinian. Made in Godot 3.5 and support Windows and Linux.
+ A tool meant for managing mods and write Load Order entries into the config file used in Ship of Harkinian. Made in Godot 3.5.1 and supports Windows and Linux builds.
  
 To use the program, you must have a existing shipofharkinian.json file, additionally you must have a exisiting mods folder with .otr file mods inside of it to manage.
 
