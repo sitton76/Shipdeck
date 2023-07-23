@@ -181,7 +181,7 @@ margin_top = 3.0
 margin_right = 97.0
 margin_bottom = 22.0
 custom_fonts/font = SubResource( 4 )
-text = "Version: 0.4"
+text = "Version: 1.0rc"
 
 [node name="soh_path" type="RichTextLabel" parent="."]
 margin_left = 128.0
