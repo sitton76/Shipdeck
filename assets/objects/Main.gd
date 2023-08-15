@@ -10,6 +10,9 @@ var opened_dialog = false
 var dia_ref #unintiated reference to the popup dialog box that is used when selecting files/folders
 var soh_folder = ""
 
+func _ready():
+	load_app_data()
+
 func populate_list(entry : String, container : Node, group_name : String):
 	#Populates a given field with entry_button nodes representing a .otr file
 	var new_instance = entry_button_file.instance()
@@ -20,6 +23,21 @@ func populate_list(entry : String, container : Node, group_name : String):
 	container.add_child(new_instance)
 	if group_name == "L-side":
 		new_instance.toggle_dir_buttons(true)
+
+func save_app_data(stored_folder):
+	var save_game = File.new()
+	var packed_data = [stored_folder]
+	save_game.open("user://shipdeckconfig.sav", save_game.WRITE)
+	save_game.store_var(packed_data, true)
+	save_game.close()
+	
+func load_app_data():
+	var load_game = File.new()
+	if load_game.file_exists("user://shipdeckconfig.sav"):
+		load_game.open("user://shipdeckconfig.sav", load_game.READ)
+		var packed_data = load_game.get_var(true)
+		setup_lists(packed_data[0])
+		load_game.close()
 
 func handle_offset():
 	#Handles spacing between items in lists.
@@ -140,13 +158,10 @@ func check_if_on_list(file_name : String, group : String) -> bool:
 			return true
 	return false
 
-func on_soh_folder_select(opened_path):
-	#Opens dialog to select folder containing shipofharkinian.json file.
-	dia_ref.queue_free()
-	opened_dialog = false
+func setup_lists(path):
 	var dir = Directory.new()
-	if find_soh_config(opened_path) == true:
-		soh_folder = opened_path
+	if find_soh_config(path) == true:
+		soh_folder = path
 		clear_selection("R-side")
 		clear_selection("L-side")
 		yield(get_tree().create_timer(0.5), "timeout")
@@ -162,9 +177,16 @@ func on_soh_folder_select(opened_path):
 						handle_offset()
 				file_name = dir.get_next()
 			check_if_can_save()
+			save_app_data(path)
 			$msg_label.display_text("shipofharkinian.json file found!")
 	else:
 		$msg_label.display_text("Folder selected does not contain shipofharknian.json file.")
+
+func on_soh_folder_select(opened_path):
+	#Opens dialog to select folder containing shipofharkinian.json file.
+	dia_ref.queue_free()
+	opened_dialog = false
+	setup_lists(opened_path)
 
 func on_dialog_close():
 	#In the event the player closes a dialog box, frees it then allows the player to spawn more.
