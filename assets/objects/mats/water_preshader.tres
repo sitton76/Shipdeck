@@ -14,4 +14,3 @@ roughness = 0.28
 normal_enabled = true
 normal_scale = 2.9
 normal_texture = SubResource( 7 )
-uv1_offset = Vector3( -0.508795, 0, 0 )

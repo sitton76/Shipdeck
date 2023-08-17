@@ -5,7 +5,10 @@ enum states{OFF, ON}
 var current_state = states.OFF
 var current_3D_scene
 
-func _on_CheckButton_pressed():
+func button_toggle() -> void:
+	$CheckButton.pressed = true
+
+func _on_CheckButton_pressed() -> void:
 	match current_state:
 		states.OFF:
 			$ShipImage.hide()
@@ -13,8 +16,10 @@ func _on_CheckButton_pressed():
 			self.add_child(new_instance)
 			current_3D_scene = new_instance
 			current_state = states.ON
+			get_parent().external_app_save_trigger()
 		states.ON:
 			current_state = states.OFF
 			current_3D_scene.queue_free()
 			$ShipImage.show()
 			current_state = states.OFF
+			get_parent().external_app_save_trigger()

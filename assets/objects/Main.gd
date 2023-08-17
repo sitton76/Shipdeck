@@ -24,22 +24,33 @@ func populate_list(entry : String, container : Node, group_name : String):
 	if group_name == "L-side":
 		new_instance.toggle_dir_buttons(true)
 
-func save_app_data(stored_folder):
+func save_app_data(stored_folder : String) -> void:
+	#Saves SoH config path, and state of the 3D background to file.
 	var save_game = File.new()
-	var packed_data = [stored_folder]
+	var packed_data = [stored_folder, $"3D_scene_holder".current_state]
 	save_game.open("user://shipdeckconfig.sav", save_game.WRITE)
 	save_game.store_var(packed_data, true)
 	save_game.close()
 	
-func load_app_data():
+func load_app_data() -> void:
+	#Loads SoH config path, and state of the 3D background from file, then attempts to reapply that data
 	var load_game = File.new()
 	if load_game.file_exists("user://shipdeckconfig.sav"):
 		load_game.open("user://shipdeckconfig.sav", load_game.READ)
 		var packed_data = load_game.get_var(true)
-		setup_lists(packed_data[0])
+		if packed_data.size() == 2:
+			if packed_data[0].length() > 0:
+				setup_lists(packed_data[0])
+			if packed_data[1] == $"3D_scene_holder".states.ON:
+				$"3D_scene_holder"._on_CheckButton_pressed()
+				$"3D_scene_holder".button_toggle()
 		load_game.close()
 
-func handle_offset():
+func external_app_save_trigger():
+	#Called when a external node triggers a app data save.
+	save_app_data(soh_folder)
+
+func handle_offset() -> void:
 	#Handles spacing between items in lists.
 	var side_groups = ["R-side", "L-side"]
 	for group in side_groups:
@@ -49,7 +60,7 @@ func handle_offset():
 			iter_count += 1
 			nodes.get_parent().rect_min_size.y = offset_value * iter_count
 
-func swap_sides(obj_ref):
+func swap_sides(obj_ref : Node) -> void:
 	#This is called from the entry_button node via the "Pressed" signal, obj_ref is the sender of the signal
 	#This may also be called from the clear load order option to return mods to the folder list if they were pulled from it.
 	if obj_ref.is_in_group("L-side"):
@@ -67,10 +78,7 @@ func swap_sides(obj_ref):
 	handle_offset()
 	check_if_can_save()
 
-func assign_soh_folderpath_text(new_path_text : String):
-	$soh_path.bbcode_text = "[center]     Ship of Harknian folder path:\n " + new_path_text + "[/center]"
-
-func save_mod_list():
+func save_mod_list() -> void:
 	#Saves mod list to the .json file
 	var stored_data = {}
 	var iter_count = 1
@@ -89,8 +97,9 @@ func save_mod_list():
 		file.close()
 		$msg_label.display_text("shipofharkinian.json entries added!")
 		opened_dialog = false
+		save_app_data(soh_folder)
 
-func purge_mod_entries():
+func purge_mod_entries() -> void:
 	#Called if Load Order is empty, will delete the "Mod-Load-Order" entry from the .json file
 	if loaded_json_file.has("Mod-Load-Order"):
 		loaded_json_file.erase("Mod-Load-Order")
@@ -102,7 +111,7 @@ func purge_mod_entries():
 		$msg_label.display_text("shipofharkinian.json entries removed!")
 		opened_dialog = false
 
-func read_json_file():
+func read_json_file() -> void:
 	#parses existing shipofharkinian.json file if it exists.
 	var dir =  Directory.new()
 	if dir.file_exists(soh_folder + "/shipofharkinian.json") == true:
@@ -112,7 +121,7 @@ func read_json_file():
 		file.close()
 		check_if_mods_is_on_list()
 
-func check_if_mods_is_on_list():
+func check_if_mods_is_on_list() -> void:
 	#When loading the .json file, it will read through it and add mods already in the load order in the file to the
 	#Load order list in the application
 	if loaded_json_file.has("Mod-Load-Order"):
@@ -135,11 +144,11 @@ func find_soh_config(path : String) -> bool:
 			return true
 	return false
 	
-func clear_selection(group : String):
+func clear_selection(group : String) -> void:
 	for nodes in get_tree().get_nodes_in_group(group):
 		nodes.queue_free()
 
-func check_if_can_save():
+func check_if_can_save() -> void:
 	#Prevents clearing list when empty, and saving when no soh_path is found
 	if L_window.get_child_count() != 0:
 		$Middle_window/VBoxContainer/clear_load_list.disabled = false
@@ -158,7 +167,8 @@ func check_if_on_list(file_name : String, group : String) -> bool:
 			return true
 	return false
 
-func setup_lists(path):
+func setup_lists(path : String) -> void:
+	#Called either when loading a folder, or when loading from stored folder path when loaded.
 	var dir = Directory.new()
 	if find_soh_config(path) == true:
 		soh_folder = path
@@ -166,7 +176,7 @@ func setup_lists(path):
 		clear_selection("L-side")
 		yield(get_tree().create_timer(0.5), "timeout")
 		read_json_file()
-		assign_soh_folderpath_text(soh_folder)
+		$soh_path.bbcode_text = "[center]     Ship of Harknian folder path:\n " + soh_folder + "[/center]"
 		if dir.open(soh_folder + "/mods") == OK:
 			dir.list_dir_begin()
 			var file_name = dir.get_next()
@@ -182,18 +192,18 @@ func setup_lists(path):
 	else:
 		$msg_label.display_text("Folder selected does not contain shipofharknian.json file.")
 
-func on_soh_folder_select(opened_path):
+func on_soh_folder_select(opened_path : String) -> void:
 	#Opens dialog to select folder containing shipofharkinian.json file.
 	dia_ref.queue_free()
 	opened_dialog = false
 	setup_lists(opened_path)
 
-func on_dialog_close():
+func on_dialog_close() -> void:
 	#In the event the player closes a dialog box, frees it then allows the player to spawn more.
 	dia_ref.queue_free()
 	opened_dialog = false
 
-func _on_save_list_pressed():
+func _on_save_list_pressed() -> void:
 	#Button to start either Adding/editing entries for mod load order, or removing it.
 	if soh_folder != "":
 		if L_window.get_child_count() != 0:
@@ -203,12 +213,12 @@ func _on_save_list_pressed():
 	else:
 		$msg_label.display_text("Please select a SoH folder first.")
 
-func _on_clear_load_list_pressed():
+func _on_clear_load_list_pressed() -> void:
 	#Empties Load order list and repopulatates the Mods list
 	for nodes in get_tree().get_nodes_in_group("L-side"):
 		swap_sides(nodes)
 
-func _on_soh_folder_pressed():
+func _on_soh_folder_pressed() -> void:
 	#File dialog for selecting SoH config path
 	if opened_dialog == false:
 		opened_dialog = true
@@ -221,6 +231,7 @@ func _on_soh_folder_pressed():
 		dia_ref = dialog
 		dialog.popup(Rect2(0, 0, 700, 500))
 
-func _on_Get_Mods_pressed():
+func _on_Get_Mods_pressed() -> void:
+	#Opens the Gamebanana page on the users default web browser.
 	# warning-ignore:return_value_discarded
 	OS.shell_open("https://gamebanana.com/games/16121")
