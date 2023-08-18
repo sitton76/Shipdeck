@@ -13,12 +13,26 @@ var soh_folder = ""
 func _ready():
 	load_app_data()
 
+func toggle_main_view(state : bool):
+	$L_window_BG.visible = state
+	$R_window_BG.visible = state
+	$Load_order.visible = state
+	$Mod_list.visible = state
+	$Left_window.visible = state
+	$Middle_window.visible = state
+	$Right_window.visible = state
+	$msg_label.visible = state
+
+func toggle_tag_view(state : bool):
+	$tag_group_view_subwindow.visible = state
+
 func populate_list(entry : String, container : Node, group_name : String):
 	#Populates a given field with entry_button nodes representing a .otr file
 	var new_instance = entry_button_file.instance()
 	new_instance.add_to_group(group_name)
 	new_instance.set_text(entry)
 	new_instance.mod_file_path = entry
+	$tag_group_view_subwindow.add_to_mods_list(entry)
 	new_instance.toggle_dir_buttons(false)
 	container.add_child(new_instance)
 	if group_name == "L-side":
@@ -178,6 +192,7 @@ func setup_lists(path : String) -> void:
 		read_json_file()
 		$soh_path.bbcode_text = "[center]     Ship of Harknian folder path:\n " + soh_folder + "[/center]"
 		if dir.open(soh_folder + "/mods") == OK:
+			$tag_group_view_subwindow.clear_mods_list()
 			dir.list_dir_begin()
 			var file_name = dir.get_next()
 			while file_name != "":
@@ -235,3 +250,7 @@ func _on_Get_Mods_pressed() -> void:
 	#Opens the Gamebanana page on the users default web browser.
 	# warning-ignore:return_value_discarded
 	OS.shell_open("https://gamebanana.com/games/16121")
+
+func _on_Manage_tags_pressed():
+	toggle_main_view(false)
+	toggle_tag_view(true)
