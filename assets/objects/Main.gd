@@ -21,7 +21,6 @@ func toggle_main_view(state : bool):
 	$Left_window.visible = state
 	$Middle_window.visible = state
 	$Right_window.visible = state
-	$msg_label.visible = state
 
 func toggle_tag_view(state : bool):
 	$tag_group_view_subwindow.visible = state
@@ -109,7 +108,7 @@ func save_mod_list() -> void:
 		file.open(file_path, file.WRITE)
 		file.store_line(to_json(loaded_json_file))
 		file.close()
-		$msg_label.display_text("shipofharkinian.json entries added!")
+		send_msg("shipofharkinian.json entries added!")
 		opened_dialog = false
 		save_app_data(soh_folder)
 
@@ -122,7 +121,7 @@ func purge_mod_entries() -> void:
 		file.open(file_path, file.WRITE)
 		file.store_line(to_json(loaded_json_file))
 		file.close()
-		$msg_label.display_text("shipofharkinian.json entries removed!")
+		send_msg("shipofharkinian.json entries removed!")
 		opened_dialog = false
 
 func read_json_file() -> void:
@@ -133,6 +132,7 @@ func read_json_file() -> void:
 		file.open(soh_folder + "/shipofharkinian.json", File.READ)
 		loaded_json_file = JSON.parse(file.get_as_text()).result
 		file.close()
+		$tag_group_view_subwindow.clear_mods_list()
 		check_if_mods_is_on_list()
 
 func check_if_mods_is_on_list() -> void:
@@ -192,7 +192,6 @@ func setup_lists(path : String) -> void:
 		read_json_file()
 		$soh_path.bbcode_text = "[center]     Ship of Harknian folder path:\n " + soh_folder + "[/center]"
 		if dir.open(soh_folder + "/mods") == OK:
-			$tag_group_view_subwindow.clear_mods_list()
 			dir.list_dir_begin()
 			var file_name = dir.get_next()
 			while file_name != "":
@@ -203,9 +202,9 @@ func setup_lists(path : String) -> void:
 				file_name = dir.get_next()
 			check_if_can_save()
 			save_app_data(path)
-			$msg_label.display_text("shipofharkinian.json file found!")
+			send_msg("shipofharkinian.json file found!")
 	else:
-		$msg_label.display_text("Folder selected does not contain shipofharknian.json file.")
+		send_msg("Folder selected does not contain shipofharknian.json file.")
 
 func on_soh_folder_select(opened_path : String) -> void:
 	#Opens dialog to select folder containing shipofharkinian.json file.
@@ -218,6 +217,9 @@ func on_dialog_close() -> void:
 	dia_ref.queue_free()
 	opened_dialog = false
 
+func send_msg(msg : String):
+	$msg_label.display_text(msg)
+
 func _on_save_list_pressed() -> void:
 	#Button to start either Adding/editing entries for mod load order, or removing it.
 	if soh_folder != "":
@@ -226,7 +228,7 @@ func _on_save_list_pressed() -> void:
 		else:
 			purge_mod_entries()
 	else:
-		$msg_label.display_text("Please select a SoH folder first.")
+		send_msg("Please select a SoH folder first.")
 
 func _on_clear_load_list_pressed() -> void:
 	#Empties Load order list and repopulatates the Mods list
@@ -254,3 +256,16 @@ func _on_Get_Mods_pressed() -> void:
 func _on_Manage_tags_pressed():
 	toggle_main_view(false)
 	toggle_tag_view(true)
+
+func _on_Accept_pressed():
+	$Randomize_warning_screen.hide()
+	toggle_main_view(true)
+	#Do stuff here later to randomizer mod load order list.
+
+func _on_Cancel_pressed():
+	$Randomize_warning_screen.hide()
+	toggle_main_view(true)
+
+func _on_Randomize_mods_pressed():
+	$Randomize_warning_screen.show()
+	toggle_main_view(false)

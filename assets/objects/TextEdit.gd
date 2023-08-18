@@ -25,7 +25,7 @@ func _input(_event):
 			editable = true
 
 func _on_Accept_pressed():
-	get_parent().get_parent().add_entry(text, current_mode)
+	get_parent().get_parent().add_entry(text, current_mode, false)
 	make_inactive()
 
 func _on_Cancel_pressed():

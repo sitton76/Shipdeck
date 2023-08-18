@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://assets/objects/Main.gd" type="Script" id=1]
 [ext_resource path="res://assets/fonts/Comfortaa-Regular.ttf" type="DynamicFontData" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://assets/objects/msg_label.tscn" type="PackedScene" id=4]
 [ext_resource path="res://assets/objects/tag_group_view_subwindow.gd" type="Script" id=5]
 [ext_resource path="res://assets/objects/TextEdit.gd" type="Script" id=6]
+[ext_resource path="res://assets/objects/Tag_editor.gd" type="Script" id=7]
 
 [sub_resource type="DynamicFont" id=3]
 size = 32
@@ -34,6 +35,24 @@ outline_color = Color( 0, 0, 0, 1 )
 font_data = ExtResource( 2 )
 
 [sub_resource type="DynamicFont" id=8]
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=12]
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=13]
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=10]
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=11]
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=9]
+size = 22
+outline_size = 2
+outline_color = Color( 0, 0, 0, 1 )
 font_data = ExtResource( 2 )
 
 [node name="Main" type="Node"]
@@ -172,7 +191,6 @@ margin_top = 175.0
 margin_right = 219.0
 margin_bottom = 200.0
 custom_fonts/font = SubResource( 7 )
-disabled = true
 text = "Randomize Mods"
 
 [node name="Spacer4" type="Control" parent="Middle_window/VBoxContainer"]
@@ -322,9 +340,9 @@ anchor_left = 0.125
 anchor_top = 0.136
 anchor_right = 0.875
 anchor_bottom = 0.831
-margin_left = 752.0
+margin_left = 766.0
 margin_top = 392.0
-margin_right = 883.0
+margin_right = 897.0
 margin_bottom = 466.0
 alignment = 1
 
@@ -342,6 +360,14 @@ margin_right = 626.0
 margin_bottom = 466.0
 custom_fonts/font = SubResource( 2 )
 text = "Return back to main menu"
+
+[node name="save_to_json" type="Button" parent="tag_group_view_subwindow"]
+margin_left = 392.0
+margin_top = 473.0
+margin_right = 626.0
+margin_bottom = 498.0
+custom_fonts/font = SubResource( 2 )
+text = "Save Tag/Group List"
 
 [node name="name_entry" type="Node2D" parent="tag_group_view_subwindow"]
 visible = false
@@ -364,6 +390,7 @@ margin_left = 512.0
 margin_top = 256.0
 margin_right = 616.0
 margin_bottom = 276.0
+custom_fonts/font = SubResource( 12 )
 text = "Accept"
 
 [node name="Cancel" type="Button" parent="tag_group_view_subwindow/name_entry"]
@@ -371,20 +398,106 @@ margin_left = 394.0
 margin_top = 256.0
 margin_right = 498.0
 margin_bottom = 276.0
+custom_fonts/font = SubResource( 13 )
 text = "Cancel"
 
 [node name="delay_timer" type="Timer" parent="tag_group_view_subwindow"]
 wait_time = 0.5
 
+[node name="Tag_group_editor" type="Node2D" parent="tag_group_view_subwindow"]
+visible = false
+script = ExtResource( 7 )
+
+[node name="L_window_BG" type="Panel" parent="tag_group_view_subwindow/Tag_group_editor"]
+modulate = Color( 1, 1, 1, 0.352941 )
+margin_left = 64.0
+margin_top = 64.0
+margin_right = 320.0
+margin_bottom = 384.0
+
+[node name="R_window_BG" type="Panel" parent="tag_group_view_subwindow/Tag_group_editor"]
+modulate = Color( 1, 1, 1, 0.352941 )
+margin_left = 704.0
+margin_top = 64.0
+margin_right = 960.0
+margin_bottom = 384.0
+
+[node name="R_list" type="ScrollContainer" parent="tag_group_view_subwindow/Tag_group_editor"]
+margin_left = 704.0
+margin_top = 64.0
+margin_right = 960.0
+margin_bottom = 384.0
+rect_min_size = Vector2( 256, 320 )
+
+[node name="Container" type="ColorRect" parent="tag_group_view_subwindow/Tag_group_editor/R_list"]
+margin_right = 256.0
+margin_bottom = 320.0
+rect_min_size = Vector2( 256, 320 )
+color = Color( 1, 1, 1, 0 )
+
+[node name="L_list" type="ScrollContainer" parent="tag_group_view_subwindow/Tag_group_editor"]
+margin_left = 64.0
+margin_top = 64.0
+margin_right = 320.0
+margin_bottom = 384.0
+rect_min_size = Vector2( 256, 320 )
+
+[node name="Container" type="ColorRect" parent="tag_group_view_subwindow/Tag_group_editor/L_list"]
+margin_right = 256.0
+margin_bottom = 320.0
+rect_min_size = Vector2( 256, 320 )
+color = Color( 1, 1, 1, 0 )
+
+[node name="Accept" type="Button" parent="tag_group_view_subwindow/Tag_group_editor"]
+margin_left = 459.0
+margin_top = 424.0
+margin_right = 563.0
+margin_bottom = 449.0
+custom_fonts/font = SubResource( 10 )
+text = "End Edit"
+
+[node name="Randomize_warning_screen" type="Node2D" parent="."]
+visible = false
+
+[node name="Accept" type="Button" parent="Randomize_warning_screen"]
+margin_left = 512.0
+margin_top = 256.0
+margin_right = 616.0
+margin_bottom = 276.0
+custom_fonts/font = SubResource( 10 )
+text = "Accept"
+
+[node name="Cancel" type="Button" parent="Randomize_warning_screen"]
+margin_left = 394.0
+margin_top = 256.0
+margin_right = 498.0
+margin_bottom = 276.0
+custom_fonts/font = SubResource( 11 )
+text = "Cancel"
+
+[node name="Label" type="Label" parent="Randomize_warning_screen"]
+margin_left = 272.0
+margin_top = 184.0
+margin_right = 766.0
+margin_bottom = 239.0
+custom_fonts/font = SubResource( 9 )
+text = "Warning: This setting will clear your current
+ Load Order list, do you want to proceed?"
+
 [connection signal="pressed" from="Middle_window/VBoxContainer/soh_folder" to="." method="_on_soh_folder_pressed"]
 [connection signal="pressed" from="Middle_window/VBoxContainer/clear_load_list" to="." method="_on_clear_load_list_pressed"]
 [connection signal="pressed" from="Middle_window/VBoxContainer/save_list" to="." method="_on_save_list_pressed"]
+[connection signal="pressed" from="Middle_window/VBoxContainer/Randomize_mods" to="." method="_on_Randomize_mods_pressed"]
 [connection signal="pressed" from="Middle_window/VBoxContainer/Manage_tags" to="." method="_on_Manage_tags_pressed"]
 [connection signal="pressed" from="Middle_window/VBoxContainer/Get Mods" to="." method="_on_Get_Mods_pressed"]
 [connection signal="pressed" from="tag_group_view_subwindow/tag_options_container/add_tag" to="tag_group_view_subwindow" method="_on_add_tag_pressed"]
 [connection signal="pressed" from="tag_group_view_subwindow/group_options_container/add_group" to="tag_group_view_subwindow" method="_on_add_group_pressed"]
 [connection signal="pressed" from="tag_group_view_subwindow/return_to_main_menu" to="tag_group_view_subwindow" method="_on_return_to_main_menu_pressed"]
+[connection signal="pressed" from="tag_group_view_subwindow/save_to_json" to="tag_group_view_subwindow" method="_on_save_to_json_pressed"]
 [connection signal="text_changed" from="tag_group_view_subwindow/name_entry/TextEdit" to="tag_group_view_subwindow/name_entry/TextEdit" method="_on_TextEdit_text_changed"]
 [connection signal="pressed" from="tag_group_view_subwindow/name_entry/Accept" to="tag_group_view_subwindow/name_entry/TextEdit" method="_on_Accept_pressed"]
 [connection signal="pressed" from="tag_group_view_subwindow/name_entry/Cancel" to="tag_group_view_subwindow/name_entry/TextEdit" method="_on_Cancel_pressed"]
 [connection signal="timeout" from="tag_group_view_subwindow/delay_timer" to="tag_group_view_subwindow" method="_on_delay_timer_timeout"]
+[connection signal="pressed" from="tag_group_view_subwindow/Tag_group_editor/Accept" to="tag_group_view_subwindow/Tag_group_editor" method="_on_Accept_pressed"]
+[connection signal="pressed" from="Randomize_warning_screen/Accept" to="." method="_on_Accept_pressed"]
+[connection signal="pressed" from="Randomize_warning_screen/Cancel" to="." method="_on_Cancel_pressed"]

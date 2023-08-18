@@ -54,25 +54,32 @@ func handle_offset() -> void:
 			iter_count += 1
 			nodes.get_parent().rect_min_size.y = offset_value * iter_count
 
+func otr_tag_group_editor_toggle(caller, sent_mode):
+	toggle_items_view(false)
+	$Tag_group_editor.start_edit(sent_mode, caller)
+
 func save_json_data() -> void:
 	#Saves group_tag_data.json.
 	var save_game = File.new()
 	save_game.open("user://group_tag_data.json", save_game.WRITE)
 	save_game.store_line(to_json(group_tag_list))
 	save_game.close()
+	get_parent().send_msg("Saved Tag/Group data!")
 	
 func read_json_data() -> void:
 	#parses existing group_tag_data.json file if it exists.
 	var dir =  Directory.new()
 	if dir.file_exists("user://group_tag_data.json") == true:
-		clear_group_list()
+		#clear_group_list()
 		var file = File.new()
 		file.open("user://group_tag_data.json", File.READ)
-		group_tag_list = JSON.parse(file.get_as_text()).result
-		for entry in group_tag_list["tags"].keys():
-			add_entry(entry, modes.TAG)
-		for entry in group_tag_list["groups"].keys():
-			add_entry(entry, modes.GROUP)
+		var loaded_list = JSON.parse(file.get_as_text()).result
+		for entry in loaded_list["tags"].keys():
+			add_entry(entry, modes.TAG, true)
+		for entry in loaded_list["groups"].keys():
+			add_entry(entry, modes.GROUP, true)
+		group_tag_list.merge(loaded_list, true)
+		print(group_tag_list)
 		file.close()
 
 func start_delay(text, type):
@@ -82,8 +89,6 @@ func start_delay(text, type):
 			group_tag_list["tags"].erase(str(text))
 		modes.GROUP:
 			group_tag_list["groups"].erase(str(text))
-	save_json_data()
-	print(group_tag_list)
 
 func toggle_items_view(state : bool):
 	$L_window_BG.visible = state
@@ -93,22 +98,29 @@ func toggle_items_view(state : bool):
 	$tag_options_container.visible = state
 	$group_options_container.visible = state
 	$return_to_main_menu.visible = state
+	$save_to_json.visible = state
 
 func toggle_name_entry(sel_mode):
 	toggle_items_view(false)
 	$name_entry/TextEdit.make_active(sel_mode)
 
-func add_entry(entry, sel_mode):
+func add_entry(entry, sel_mode, on_load):
 	match sel_mode:
 		modes.TAG:
-			group_tag_list["tags"].merge({str(entry) : {}}, false)
-			populate_list(sel_mode, containers[0], entry)
+			if group_tag_list["tags"].has(entry) == false:
+				if on_load == false:
+					group_tag_list["tags"].merge({str(entry) : {}}, false)
+				populate_list(sel_mode, containers[0], entry)
 		modes.GROUP:
-			group_tag_list["groups"].merge({str(entry) : {}}, false)
-			populate_list(sel_mode, containers[1], entry)
-	print(group_tag_list)
-	save_json_data()
+			if group_tag_list["tags"].has(entry) == false:
+				if on_load == false:
+					group_tag_list["groups"].merge({str(entry) : {}}, false)
+				populate_list(sel_mode, containers[1], entry)
 	toggle_items_view(true)
+
+func store_sub_entry(main_dir, entry, sub_entry):
+	group_tag_list[str(main_dir)][str(entry)].merge(sub_entry, false)
+	print(group_tag_list[str(main_dir)][str(entry)])
 
 func _on_return_to_main_menu_pressed():
 	get_parent().toggle_tag_view(false)
@@ -123,3 +135,6 @@ func _on_add_group_pressed():
 
 func _on_delay_timer_timeout():
 	handle_offset()
+
+func _on_save_to_json_pressed():
+	save_json_data()

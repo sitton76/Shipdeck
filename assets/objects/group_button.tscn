@@ -29,4 +29,5 @@ margin_bottom = 42.0
 rect_scale = Vector2( 1, 0.680001 )
 text = "-"
 
+[connection signal="pressed" from="move_side_button" to="." method="_on_move_side_button_pressed"]
 [connection signal="pressed" from="remove_button" to="." method="_on_remove_button_pressed"]
