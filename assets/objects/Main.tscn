@@ -246,7 +246,7 @@ margin_top = 3.0
 margin_right = 97.0
 margin_bottom = 22.0
 custom_fonts/font = SubResource( 4 )
-text = "Version: 1.0"
+text = "Version: 1.1"
 __meta__ = {
 "_edit_lock_": true
 }
@@ -456,6 +456,14 @@ margin_bottom = 449.0
 custom_fonts/font = SubResource( 10 )
 text = "End Edit"
 
+[node name="save_list" type="Button" parent="tag_group_view_subwindow/Tag_group_editor"]
+margin_left = 459.0
+margin_top = 459.0
+margin_right = 563.0
+margin_bottom = 484.0
+custom_fonts/font = SubResource( 10 )
+text = "Save List"
+
 [node name="Randomize_warning_screen" type="Node2D" parent="."]
 visible = false
 
@@ -499,5 +507,6 @@ text = "Warning: This setting will clear your current
 [connection signal="pressed" from="tag_group_view_subwindow/name_entry/Cancel" to="tag_group_view_subwindow/name_entry/TextEdit" method="_on_Cancel_pressed"]
 [connection signal="timeout" from="tag_group_view_subwindow/delay_timer" to="tag_group_view_subwindow" method="_on_delay_timer_timeout"]
 [connection signal="pressed" from="tag_group_view_subwindow/Tag_group_editor/Accept" to="tag_group_view_subwindow/Tag_group_editor" method="_on_Accept_pressed"]
+[connection signal="pressed" from="tag_group_view_subwindow/Tag_group_editor/save_list" to="tag_group_view_subwindow/Tag_group_editor" method="_on_save_list_pressed"]
 [connection signal="pressed" from="Randomize_warning_screen/Accept" to="." method="_on_Accept_pressed"]
 [connection signal="pressed" from="Randomize_warning_screen/Cancel" to="." method="_on_Cancel_pressed"]

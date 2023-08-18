@@ -79,7 +79,6 @@ func read_json_data() -> void:
 		for entry in loaded_list["groups"].keys():
 			add_entry(entry, modes.GROUP, true)
 		group_tag_list.merge(loaded_list, true)
-		print(group_tag_list)
 		file.close()
 
 func start_delay(text, type):

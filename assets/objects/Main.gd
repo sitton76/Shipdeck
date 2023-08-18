@@ -206,6 +206,21 @@ func setup_lists(path : String) -> void:
 	else:
 		send_msg("Folder selected does not contain shipofharknian.json file.")
 
+func randomize_mods():
+	_on_clear_load_list_pressed()
+	var got_dic = $tag_group_view_subwindow.group_tag_list.duplicate(true)
+	var RNG = RandomNumberGenerator.new()
+	var iter_count = 0
+	for tags in got_dic["tags"].keys():
+		var got_size = got_dic["tags"][tags].size()
+		if got_size > 0:
+			RNG.seed = hash(OS.get_ticks_msec() + (iter_count * 64))
+			var selection = got_dic["tags"][tags].get(str(RNG.randi_range(0, got_size - 1)))
+			for nodes in get_tree().get_nodes_in_group("R-side"):
+				if nodes.mod_file_path == selection:
+					swap_sides(nodes)
+			iter_count += 1
+
 func on_soh_folder_select(opened_path : String) -> void:
 	#Opens dialog to select folder containing shipofharkinian.json file.
 	dia_ref.queue_free()
@@ -260,7 +275,7 @@ func _on_Manage_tags_pressed():
 func _on_Accept_pressed():
 	$Randomize_warning_screen.hide()
 	toggle_main_view(true)
-	#Do stuff here later to randomizer mod load order list.
+	randomize_mods()
 
 func _on_Cancel_pressed():
 	$Randomize_warning_screen.hide()
