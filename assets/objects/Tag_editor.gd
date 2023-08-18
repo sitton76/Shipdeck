@@ -70,6 +70,10 @@ func construct_dic() -> Dictionary:
 
 func end_edit():
 	self.hide()
+	for nodes in get_tree().get_nodes_in_group("R_OTR"):
+		nodes.queue_free()
+	for nodes in get_tree().get_nodes_in_group("L_OTR"):
+		nodes.queue_free()
 	current_mode = null
 	working_obj = null
 	get_parent().toggle_items_view(true)
@@ -86,10 +90,5 @@ func _on_save_list_pressed():
 		1:
 			get_parent().group_tag_list["groups"].erase(str(working_obj.entry))
 			get_parent().group_tag_list["groups"].merge({str(working_obj.entry) : construct_dic()})
-
 			get_tree().current_scene.send_msg("Group entry updated")
-	for nodes in get_tree().get_nodes_in_group("R_OTR"):
-		nodes.queue_free()
-	for nodes in get_tree().get_nodes_in_group("L_OTR"):
-		nodes.queue_free()
 	end_edit()
