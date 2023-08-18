@@ -462,7 +462,7 @@ margin_top = 459.0
 margin_right = 563.0
 margin_bottom = 484.0
 custom_fonts/font = SubResource( 10 )
-text = "Save List"
+text = "Apply"
 
 [node name="Randomize_warning_screen" type="Node2D" parent="."]
 visible = false

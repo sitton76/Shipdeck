@@ -216,10 +216,32 @@ func randomize_mods():
 		if got_size > 0:
 			RNG.seed = hash(OS.get_ticks_msec() + (iter_count * 64))
 			var selection = got_dic["tags"][tags].get(str(RNG.randi_range(0, got_size - 1)))
-			for nodes in get_tree().get_nodes_in_group("R-side"):
-				if nodes.mod_file_path == selection:
-					swap_sides(nodes)
+			if randomize_group_check(selection, got_dic) == false:
+				#This part only gets executed if the selected item is not part of a group
+				for nodes in get_tree().get_nodes_in_group("R-side"):
+					if nodes.mod_file_path == selection:
+						swap_sides(nodes)
 			iter_count += 1
+
+func randomize_group_check(selection, sent_dic) -> bool:
+	#If a item is part of a group, then it will swap all associated mods tied to it.
+	var in_group = false
+	var found_group
+	for entry in sent_dic["groups"].keys():
+		for subentry in sent_dic["groups"][entry]:
+			if in_group == false:
+				if sent_dic["groups"][entry][subentry] == selection:
+					found_group = [sent_dic["groups"][entry], sent_dic["groups"][entry].size()]
+					in_group = true
+					break
+		if in_group == true:
+			break
+	if in_group == true:
+		for count in range(found_group[1]):
+			for nodes in get_tree().get_nodes_in_group("R-side"):
+				if nodes.mod_file_path == found_group[0].get(str(count)):
+					swap_sides(nodes)
+	return in_group
 
 func on_soh_folder_select(opened_path : String) -> void:
 	#Opens dialog to select folder containing shipofharkinian.json file.
